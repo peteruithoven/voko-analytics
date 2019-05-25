@@ -39,7 +39,7 @@ function Accounts() {
       </Typography>
       <Box display="flex">
         <Box flexGrow="1">
-          <Typography variant="h5" gutterBottom>
+          <Typography variant="h5" gutterBottom align="center">
             Active
           </Typography>
           <ResponsiveContainer width="100%" height={300}>
@@ -47,7 +47,7 @@ function Accounts() {
           </ResponsiveContainer>
         </Box>
         <Box flexGrow="1">
-          <Typography variant="h5" gutterBottom>
+          <Typography variant="h5" gutterBottom align="center">
             Sleeping
           </Typography>
           <ResponsiveContainer width="100%" height={300}>
