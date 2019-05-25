@@ -1,14 +1,21 @@
 import React, { useState } from 'react';
 import { useFetch } from 'react-fetch-hook';
-import {
-  VictoryLine,
-  VictoryChart,
-  VictoryAxis,
-  VictoryZoomContainer,
-} from 'victory';
-import Legend from './Legend.js';
 import { Box, Typography } from '@material-ui/core';
-import colorScale from './colorScale';
+import {
+  LineChart,
+  Line,
+  XAxis,
+  YAxis,
+  CartesianGrid,
+  Tooltip,
+  Legend,
+  ResponsiveContainer,
+  Brush,
+} from 'recharts';
+import dayjs from 'dayjs';
+import { blueGrey } from '@material-ui/core/colors';
+import Settings from './Legend.js';
+import colors from './colors.js';
 
 const fieldLabels = {
   number_of_orders: 'Aantal bestellingen',
@@ -25,24 +32,21 @@ const initialState = Object.entries(fieldLabels).reduce(
     accumulator[key] = {
       label: value,
       visible: true,
-      color: colorScale[index],
+      color: colors[index],
     };
     return accumulator;
   },
   {}
 );
 
+const shortDateFormatter = item => dayjs(item).format('MMM YY');
+const longDateFormatter = item => dayjs(item).format('D MMM YYYY');
+
 function Orders() {
   const [fields, setFields] = useState(initialState);
 
   const { isLoading, data } = useFetch('data/orders.json');
   if (isLoading || !data) return 'Loading...';
-  const processedData =
-    data &&
-    data.map(order => ({
-      ...order,
-      open_for_orders_date: new Date(order.open_for_orders_date),
-    }));
   const onLegendChange = (key, checked) =>
     setFields({
       ...fields,
@@ -58,29 +62,46 @@ function Orders() {
         <Typography variant="h5" gutterBottom>
           Bestel rondes
         </Typography>
-        <VictoryChart
-          scale={{ x: 'time' }}
-          containerComponent={<VictoryZoomContainer zoomDimension="x" />}
-        >
-          <VictoryAxis dependentAxis standalone={false} />
-          <VictoryAxis standalone={false} fixLabelOverlap={true} />
-          {Object.entries(fields).map(([key, field]) =>
-            field.visible ? (
-              <VictoryLine
-                key={key}
-                data={processedData}
-                interpolation="natural"
-                x="open_for_orders_date"
-                y={key}
-                style={{
-                  data: { stroke: field.color },
-                }}
-              />
-            ) : null
-          )}
-        </VictoryChart>
+        <ResponsiveContainer width="100%" height={400}>
+          <LineChart
+            data={data}
+            margin={{ top: 5, right: 30, left: 20, bottom: 5 }}
+          >
+            <XAxis
+              dataKey="open_for_orders_date"
+              tickFormatter={shortDateFormatter}
+            />
+            <YAxis />
+            <CartesianGrid strokeDasharray="3 5" />
+            <Tooltip
+              labelFormatter={longDateFormatter}
+              animationEasing="ease-out"
+              animationDuration={300}
+            />
+            <Legend />
+            {Object.entries(fields).map(
+              ([key, field]) =>
+                field.visible && (
+                  <Line
+                    name={field.label}
+                    type="monotone"
+                    dataKey={key}
+                    stroke={field.color}
+                    key={key}
+                    animationDuration={300}
+                  />
+                )
+            )}
+            <Brush
+              dataKey="open_for_orders_date"
+              height={30}
+              stroke={blueGrey[500]}
+              tickFormatter={shortDateFormatter}
+            />
+          </LineChart>
+        </ResponsiveContainer>
       </Box>
-      <Legend fields={fields} onChange={onLegendChange} />
+      <Settings fields={fields} onChange={onLegendChange} />
     </Box>
   );
 }

@@ -1,15 +1,18 @@
 import React from 'react';
-import Checkbox from '@material-ui/core/Checkbox';
-import FormGroup from '@material-ui/core/FormGroup';
-import FormControlLabel from '@material-ui/core/FormControlLabel';
-import Typography from '@material-ui/core/Typography';
+import {
+  Checkbox,
+  FormGroup,
+  FormControlLabel,
+  Typography,
+} from '@material-ui/core';
+
 import { withStyles } from '@material-ui/core/styles';
 
 const ColoredCheckbox = withStyles({
   root: {
-    color: props => props.color,
+    color: props => props.customcolor,
     '&$checked': {
-      color: props => props.color,
+      color: props => props.customcolor,
     },
   },
   checked: {},
@@ -29,7 +32,7 @@ const Legend = ({ fields, onChange }) => (
               checked={field.visible}
               onChange={event => onChange(key, event.target.checked)}
               value={key}
-              color={field.color}
+              customcolor={field.color}
             />
           }
           label={field.label}

@@ -1,7 +1,7 @@
 import React from 'react';
-import Accounts from './Accounts.js';
-import Orders from './Orders.js';
 import { Container } from '@material-ui/core';
+import Orders from './Orders.js';
+import Accounts from './Accounts.js';
 
 function App() {
   return (

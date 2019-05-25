@@ -1,46 +1,61 @@
 import React from 'react';
 import { useFetch } from 'react-fetch-hook';
-import { VictoryPie } from 'victory';
-import styled from 'styled-components';
+import { Box, Typography } from '@material-ui/core';
+import { ResponsiveContainer } from 'recharts';
+import colors from './colors.js';
+import BooleanPieChart from './BooleanPieChart.js';
 
-const Container = styled.div`
-  display: flex;
-`;
+function countField(data, fieldName, trueLabel, falseLabel) {
+  const numTrue = data.filter(item => item[fieldName]).length;
+  return [
+    {
+      name: trueLabel,
+      value: numTrue,
+      color: colors[0],
+    },
+    {
+      name: falseLabel,
+      value: data.length - numTrue,
+      color: '#ffffff',
+    },
+  ];
+}
 
 function Accounts() {
   const { isLoading, data } = useFetch('data/accounts.json');
   if (isLoading || !data) return 'Loading...';
-  console.log('accounts data: ', data);
-  const numActive = data.filter(account => account.is_active).length;
-  const isActiveData = [
-    {
-      x: 'active',
-      y: numActive,
-    },
-    {
-      x: 'inactive',
-      y: data.length - numActive,
-    },
-  ];
-  const numSleeping = data.filter(account => account.is_asleep).length;
-  console.log('numSleeping: ', numSleeping);
-  console.log('data.length');
+  const isSleepingData = countField(
+    data,
+    'is_asleep',
+    'Sleeping',
+    'Not sleeping'
+  );
+  const isActiveData = countField(data, 'is_active', 'Active', 'Inactive');
 
-  const isSleepingData = [
-    {
-      x: 'sleeping',
-      y: numSleeping,
-    },
-    {
-      x: 'not sleeping',
-      y: data.length - numSleeping,
-    },
-  ];
   return (
-    <Container>
-      <VictoryPie data={isActiveData} />
-      <VictoryPie data={isSleepingData} />
-    </Container>
+    <Box m={1}>
+      <Typography variant="h5" gutterBottom>
+        Accounts
+      </Typography>
+      <Box display="flex">
+        <Box flexGrow="1">
+          <Typography variant="h5" gutterBottom>
+            Active
+          </Typography>
+          <ResponsiveContainer width="100%" height={300}>
+            <BooleanPieChart data={isActiveData} />
+          </ResponsiveContainer>
+        </Box>
+        <Box flexGrow="1">
+          <Typography variant="h5" gutterBottom>
+            Sleeping
+          </Typography>
+          <ResponsiveContainer width="100%" height={300}>
+            <BooleanPieChart data={isSleepingData} />
+          </ResponsiveContainer>
+        </Box>
+      </Box>
+    </Box>
   );
 }
 
