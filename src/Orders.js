@@ -117,6 +117,7 @@ function Orders() {
                     />
                   )
               )}
+              {/* Annotations. Note: Pick a x value that already exists */}
               <ReferenceLine
                 x="2018-12-09"
                 stroke={teal[500]}
