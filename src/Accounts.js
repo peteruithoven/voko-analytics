@@ -42,7 +42,7 @@ function Accounts() {
       <Typography variant="h5" gutterBottom>
         Accounts
       </Typography>
-      <GridList cellHeight={300}>
+      <GridList cellHeight={250}>
         {visibleStates.map((state, index) => (
           <GridListTile key={state.key}>
             <Typography variant="h5" gutterBottom align="center">
