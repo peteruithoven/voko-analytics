@@ -1,21 +1,21 @@
 export const accountStates = [
   {
-    label: 'Ordered',
+    label: 'Heeft besteld',
     key: 'ordered',
     predicate: account => !!account.first_order_date,
   },
   {
-    label: 'Active',
+    label: 'Geactiveerd',
     key: 'active',
     predicate: account => account.is_active,
   },
   {
-    label: 'Confirmed',
+    label: 'Email Bevestigd',
     key: 'confirmed',
     predicate: account => !!account.confirmed_date,
   },
   {
-    label: 'Registered',
+    label: 'Geregistreerd',
     key: 'created',
     predicate: account => true,
   },

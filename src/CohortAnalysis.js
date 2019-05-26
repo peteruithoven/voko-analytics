@@ -94,7 +94,7 @@ const CohortAnalysis = ({ data }) => {
   return (
     <Box>
       <Typography variant="h5" gutterBottom>
-        Cohort analysis
+        Cohort analyse
       </Typography>
       <ResponsiveContainer width="100%" height={400}>
         <AreaChart data={cohorts} stackOffset="expand">
