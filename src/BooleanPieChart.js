@@ -10,7 +10,7 @@ const renderCustomizedLabel = ({ name, value, x, y, fill, textAnchor }) => {
       textAnchor={textAnchor}
       dominantBaseline="central"
     >
-      {`${name}: ${value}`}
+      {value}
     </text>
   );
 };
@@ -21,6 +21,7 @@ const BooleanPieChart = ({ data, ...props }) => (
       nameKey="name"
       dataKey="value"
       animationDuration={300}
+      // label
       label={renderCustomizedLabel}
       data={data}
     >
