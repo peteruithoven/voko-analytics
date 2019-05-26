@@ -40,13 +40,16 @@ function Accounts() {
   return (
     <Box m={1}>
       <Typography variant="h5" gutterBottom>
-        Accounts
+        Leden
       </Typography>
       <GridList cellHeight={250}>
         {visibleStates.map((state, index) => (
           <GridListTile key={state.key}>
-            <Typography variant="h5" gutterBottom align="center">
+            <Typography variant="h5" align="center">
               {state.label}
+            </Typography>
+            <Typography variant="subtitle1" gutterBottom align="center">
+              {state.description}
             </Typography>
             <ResponsiveContainer width="100%" height={200}>
               <BooleanPieChart
