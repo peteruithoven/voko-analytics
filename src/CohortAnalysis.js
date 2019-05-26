@@ -10,8 +10,9 @@ import {
   Legend,
   ResponsiveContainer,
   Brush,
+  ReferenceLine,
 } from 'recharts';
-import { blueGrey } from '@material-ui/core/colors';
+import { blueGrey, teal } from '@material-ui/core/colors';
 import colors from './colors.js';
 import { accountStates, getAccountState } from './accountStates.js';
 
@@ -123,6 +124,13 @@ const CohortAnalysis = ({ data }) => {
             }}
           />
           <Legend iconType="circle" />
+          <ReferenceLine
+            x="2018-12-14"
+            stroke={teal[500]}
+            strokeDasharray="3 3"
+            label="Nieuwe website"
+            alwaysShow={true}
+          />
           <Brush
             dataKey="startDate"
             height={30}

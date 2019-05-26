@@ -11,9 +11,11 @@ import {
   Legend,
   ResponsiveContainer,
   Brush,
+  ReferenceLine,
 } from 'recharts';
+
 import dayjs from 'dayjs';
-import { blueGrey } from '@material-ui/core/colors';
+import { blueGrey, teal } from '@material-ui/core/colors';
 import Settings from './Legend.js';
 import colors from './colors.js';
 
@@ -115,6 +117,12 @@ function Orders() {
                     />
                   )
               )}
+              <ReferenceLine
+                x="2018-12-09"
+                stroke={teal[500]}
+                strokeDasharray="3 3"
+                label="Nieuwe website"
+              />
               <Brush
                 dataKey="open_for_orders_date"
                 height={30}
