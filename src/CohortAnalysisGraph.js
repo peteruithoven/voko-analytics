@@ -68,13 +68,13 @@ const CohortAnalysisGraph = ({ data }) => {
     (a, b) => a.created_date.toDate() - b.created_date.toDate()
   );
   const firstCreatedDate = sorted[0].created_date;
-  const lastCreatedDate = sorted[sorted.length - 1].created_date;
+  const lastDate = dayjs(); // now
 
   // Retrieve cohorts per month
   const cohorts = [];
   let tickStart = firstCreatedDate;
   let tickEnd = tickStart.add(1, 'month');
-  while (tickEnd.isBefore(lastCreatedDate)) {
+  do {
     const accounts = getCohortAccounts(sorted, tickStart, tickEnd);
     const statesCounts = getStatesCounts(accounts);
     const statesPercs = getStatesPercs(statesCounts, accounts.length);
@@ -87,8 +87,9 @@ const CohortAnalysisGraph = ({ data }) => {
       ...statesPercs,
     });
     tickStart = tickEnd;
-    tickEnd = tickEnd.add(1, 'week');
-  }
+    tickEnd = tickEnd.add(1, 'month');
+  } while (tickEnd.isBefore(lastDate));
+  console.log('cohorts: ', cohorts);
 
   return (
     <ResponsiveContainer width="100%" height={400}>
@@ -119,13 +120,13 @@ const CohortAnalysisGraph = ({ data }) => {
         />
         <Legend iconType="circle" />
         <ReferenceLine
-          x="2018-12-14"
+          x="2018-12-31T23:00:00.000Z"
           stroke={teal[500]}
           strokeDasharray="3 3"
           label="Nieuwe website"
         />
         <Brush
-          dataKey="startDate"
+          dataKey="endDate"
           height={30}
           stroke={blueGrey[500]}
           tickFormatter={formatters.shortDate}
