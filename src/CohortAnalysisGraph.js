@@ -109,7 +109,7 @@ const CohortAnalysisGraph = ({ data }) => {
           />
         ))}
         <Tooltip
-          labelFormatter={toolTipFormatter}
+          labelFormatter={formatters.longDate}
           animationEasing="ease-out"
           animationDuration={300}
           formatter={(value, name, props) => {
