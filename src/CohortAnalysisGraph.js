@@ -1,5 +1,4 @@
 import React from 'react';
-import { Box, Typography } from '@material-ui/core';
 import dayjs from 'dayjs';
 import {
   AreaChart,
@@ -56,7 +55,7 @@ const toPercent = (decimal, fixed = 0) => `${(decimal * 100).toFixed(fixed)}%`;
 const shortDateFormatter = item => dayjs(item).format('MMM YY');
 const longDateFormatter = item => dayjs(item).format('D MMM YYYY');
 
-const CohortAnalysis = ({ data }) => {
+const CohortAnalysisGraph = ({ data }) => {
   // convert dates to dayjs instances
   const converted = data.map(account => ({
     ...account,
@@ -93,54 +92,48 @@ const CohortAnalysis = ({ data }) => {
   }
 
   return (
-    <Box>
-      <Typography variant="h5" gutterBottom>
-        Cohort analyse
-      </Typography>
-      <ResponsiveContainer width="100%" height={400}>
-        <AreaChart data={cohorts} stackOffset="expand">
-          <XAxis dataKey="startDate" tickFormatter={shortDateFormatter} />
-          <YAxis tickFormatter={toPercent} />
-          {accountStates.map((state, index) => (
-            <Area
-              name={state.label}
-              dataKey={`${state.key}Perc`}
-              // stroke="none"
-              stroke={colors[index]}
-              fill={colors[index]}
-              type="monotone"
-              stackId="cohort"
-              key={state.key}
-            />
-          ))}
-          <Tooltip
-            labelFormatter={longDateFormatter}
-            animationEasing="ease-out"
-            animationDuration={300}
-            formatter={(value, name, props) => {
-              const state = props.dataKey.replace('Perc', '');
-              const count = props.payload[state];
-              return `${count} (${toPercent(value)})`;
-            }}
+    <ResponsiveContainer width="100%" height={400}>
+      <AreaChart data={cohorts} stackOffset="expand">
+        <XAxis dataKey="startDate" tickFormatter={shortDateFormatter} />
+        <YAxis tickFormatter={toPercent} />
+        {accountStates.map((state, index) => (
+          <Area
+            name={state.label}
+            dataKey={`${state.key}Perc`}
+            // stroke="none"
+            stroke={colors[index]}
+            fill={colors[index]}
+            type="monotone"
+            stackId="cohort"
+            key={state.key}
           />
-          <Legend iconType="circle" />
-          <ReferenceLine
-            x="2018-12-14"
-            stroke={teal[500]}
-            strokeDasharray="3 3"
-            label="Nieuwe website"
-            alwaysShow={true}
-          />
-          <Brush
-            dataKey="startDate"
-            height={30}
-            stroke={blueGrey[500]}
-            tickFormatter={shortDateFormatter}
-          />
-        </AreaChart>
-      </ResponsiveContainer>
-    </Box>
+        ))}
+        <Tooltip
+          labelFormatter={longDateFormatter}
+          animationEasing="ease-out"
+          animationDuration={300}
+          formatter={(value, name, props) => {
+            const state = props.dataKey.replace('Perc', '');
+            const count = props.payload[state];
+            return `${count} (${toPercent(value)})`;
+          }}
+        />
+        <Legend iconType="circle" />
+        <ReferenceLine
+          x="2018-12-14"
+          stroke={teal[500]}
+          strokeDasharray="3 3"
+          label="Nieuwe website"
+        />
+        <Brush
+          dataKey="startDate"
+          height={30}
+          stroke={blueGrey[500]}
+          tickFormatter={shortDateFormatter}
+        />
+      </AreaChart>
+    </ResponsiveContainer>
   );
 };
 
-export default CohortAnalysis;
+export default CohortAnalysisGraph;
