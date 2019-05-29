@@ -29,7 +29,7 @@ function LastOrderStats({ lastOrder }) {
   return (
     <Box display="flex">
       {lastOrderFields.map(({ key, label, unit }) => (
-        <Box key={key} mr={1}>
+        <Box key={key} mr={2}>
           {unit && <Typography display="inline">{unit} </Typography>}
           <Typography display="inline">{lastOrder[key]} </Typography>
           <Typography display="inline">{label}</Typography>

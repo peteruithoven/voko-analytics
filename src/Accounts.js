@@ -19,7 +19,7 @@ function getStatePieData(data, state, color) {
     {
       name: '',
       value: data.length - count,
-      color: '#ffffff',
+      color: '#FAFAFA',
     },
   ];
 }
