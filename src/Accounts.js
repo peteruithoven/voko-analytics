@@ -34,7 +34,7 @@ const visibleStates = [
 
 function Accounts() {
   const { isLoading, data } = useFetch('data/accounts.json');
-  if (isLoading || !data) return 'Loading...';
+  if (isLoading || !data) return <p>Loading accounts...</p>;
 
   return (
     <Box m={1}>

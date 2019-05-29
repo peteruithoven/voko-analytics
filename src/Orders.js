@@ -31,7 +31,7 @@ function Orders() {
   const [fields, setFields] = useState(initialState);
 
   const { isLoading, data } = useFetch('data/orders.json');
-  if (isLoading || !data) return 'Loading...';
+  if (isLoading || !data) return <p>Loading orders...</p>;
   const lastOrder = data[data.length - 1];
   const onLegendChange = (key, checked) =>
     setFields({
