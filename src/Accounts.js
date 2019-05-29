@@ -4,6 +4,7 @@ import { Box, Typography, GridList, GridListTile } from '@material-ui/core';
 import { ResponsiveContainer } from 'recharts';
 import colors from './colors.js';
 import BooleanPieChart from './BooleanPieChart.js';
+import AccountsHistoryGraph from './AccountsHistoryGraph.js';
 import CohortAnalysisGraph from './CohortAnalysisGraph.js';
 import { accountStates } from './accountStates.js';
 
@@ -58,6 +59,12 @@ function Accounts() {
           </GridListTile>
         ))}
       </GridList>
+      <Box>
+        <Typography variant="h5" gutterBottom>
+          Leden geschiedenis
+        </Typography>
+        <AccountsHistoryGraph data={data} />
+      </Box>
       <Box>
         <Typography variant="h5" gutterBottom>
           Cohort analyse

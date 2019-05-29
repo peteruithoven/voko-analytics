@@ -14,52 +14,82 @@ import {
 
 import dayjs from 'dayjs';
 import { blueGrey, teal } from '@material-ui/core/colors';
+import { accountStates } from './accountStates.js';
+import * as formatters from './formatters.js';
 
-const shortDateFormatter = item => dayjs(item).format('MMM YY');
-const longDateFormatter = item => dayjs(item).format('D MMM YYYY');
+const toolTipFormatter = item => 'Tot: ' + formatters.longDate(item);
+
+const countFieldBefore = (data, field, date) =>
+  data.filter(item => item[field] && item[field].isBefore(date)).length;
+
+const fields = accountStates.filter(({ key }) => key !== 'active');
 
 function OrdersHistoryGraph({ data }) {
+  // convert dates to dayjs instances
+  const converted = data.map(account => ({
+    ...account,
+    created_date: account.created_date && dayjs(account.created_date),
+    confirmed_date: account.confirmed_date && dayjs(account.confirmed_date),
+    first_order_date:
+      account.first_order_date && dayjs(account.first_order_date),
+  }));
+  // sort on created (old > new)
+  const sorted = converted.sort(
+    (a, b) => a.created_date.toDate() - b.created_date.toDate()
+  );
+  const firstCreatedDate = sorted[0].created_date;
+  const lastDate = dayjs(); // now
+
+  const ticks = [];
+  let tickStart = firstCreatedDate;
+  let tickEnd = tickStart.add(1, 'month');
+  do {
+    ticks.push({
+      startDate: tickStart.toISOString(),
+      endDate: tickEnd.toISOString(),
+      created: countFieldBefore(converted, 'created_date', tickEnd),
+      confirmed: countFieldBefore(converted, 'confirmed_date', tickEnd),
+      ordered: countFieldBefore(converted, 'first_order_date', tickEnd),
+    });
+    tickStart = tickEnd;
+    tickEnd = tickEnd.add(1, 'month');
+  } while (tickEnd.isBefore(lastDate));
+
   return (
     <ResponsiveContainer width="100%" height={400}>
-      <LineChart data={data} margin={{ top: 0, right: 30, left: 0, bottom: 0 }}>
-        <XAxis
-          dataKey="open_for_orders_date"
-          tickFormatter={shortDateFormatter}
-        />
+      <LineChart data={ticks}>
+        <XAxis dataKey="endDate" tickFormatter={formatters.shortDate} />
         <YAxis />
         <CartesianGrid strokeDasharray="3 5" />
         <Tooltip
-          labelFormatter={longDateFormatter}
+          labelFormatter={toolTipFormatter}
           animationEasing="ease-out"
           animationDuration={300}
         />
         <Legend />
-        {Object.entries(fields).map(
-          ([key, field]) =>
-            field.visible && (
-              <Line
-                name={field.label}
-                type="monotone"
-                dataKey={key}
-                stroke={field.color}
-                key={key}
-                animationDuration={300}
-                dot={false}
-              />
-            )
-        )}
+        {fields.map(field => (
+          <Line
+            name={field.label}
+            type="monotone"
+            dataKey={field.key}
+            stroke={field.color}
+            key={field.key}
+            animationDuration={300}
+            dot={false}
+          />
+        ))}
         {/* Annotations. Note: Pick a x value that already exists */}
         <ReferenceLine
-          x="2018-12-09"
+          x="2018-12-31T23:00:00.000Z"
           stroke={teal[500]}
           strokeDasharray="3 3"
           label="Nieuwe website"
         />
         <Brush
-          dataKey="open_for_orders_date"
+          dataKey="endDate"
           height={30}
           stroke={blueGrey[500]}
-          tickFormatter={shortDateFormatter}
+          tickFormatter={formatters.shortDate}
         />
       </LineChart>
     </ResponsiveContainer>
