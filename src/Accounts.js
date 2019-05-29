@@ -27,11 +27,11 @@ function getStatePieData(data, state, color) {
 const revertedAccountStates = [...accountStates].reverse();
 const visibleStates = [
   ...revertedAccountStates.filter(state => state.key !== 'created'),
-  {
-    label: 'Sleeping',
-    key: 'sleeping',
-    predicate: account => account.is_asleep,
-  },
+  // {
+  //   label: 'Sleeping',
+  //   key: 'sleeping',
+  //   predicate: account => account.is_asleep,
+  // },
 ];
 
 function Accounts() {
