@@ -24,8 +24,9 @@ function getStatePieData(data, state, color) {
   ];
 }
 
+const revertedAccountStates = [...accountStates].reverse();
 const visibleStates = [
-  ...accountStates.filter(state => state.key !== 'created'),
+  ...revertedAccountStates.filter(state => state.key !== 'created'),
   {
     label: 'Sleeping',
     key: 'sleeping',
