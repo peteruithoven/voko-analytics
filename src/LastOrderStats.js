@@ -1,19 +1,36 @@
 import React from 'react';
 import { Box, Typography } from '@material-ui/core';
 
-const lastOrderFieldLabels = {
-  number_of_members: 'Leden',
-  number_of_orders: 'Bestellingen',
-  numbers_of_suppliers: 'Leveranciers',
-  number_of_products: 'Producten',
-  total_revenue: 'Omzet',
-};
+const lastOrderFields = [
+  {
+    key: 'number_of_members',
+    label: 'Leden',
+  },
+  {
+    key: 'number_of_orders',
+    label: 'Bestellingen',
+  },
+  {
+    key: 'numbers_of_suppliers',
+    label: 'Leveranciers',
+  },
+  {
+    key: 'number_of_products',
+    label: 'Producten',
+  },
+  {
+    key: 'total_revenue',
+    label: 'Omzet',
+    unit: '€',
+  },
+];
 
 function LastOrderStats({ lastOrder }) {
   return (
     <Box display="flex">
-      {Object.entries(lastOrderFieldLabels).map(([key, label]) => (
+      {lastOrderFields.map(({ key, label, unit }) => (
         <Box key={key} mr={1}>
+          {unit && <Typography display="inline">{unit} </Typography>}
           <Typography display="inline">{lastOrder[key]} </Typography>
           <Typography display="inline">{label}</Typography>
         </Box>
