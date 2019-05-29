@@ -14,6 +14,7 @@ import {
 import { blueGrey, teal } from '@material-ui/core/colors';
 import colors from './colors.js';
 import { accountStates, getAccountState } from './accountStates.js';
+import * as formatters from './formatters.js';
 
 const initialStatesCount = {};
 for (const state of accountStates) {
@@ -51,9 +52,7 @@ const getStatesPercs = (states, total) => {
   return percs;
 };
 
-const toPercent = (decimal, fixed = 0) => `${(decimal * 100).toFixed(fixed)}%`;
-const shortDateFormatter = item => dayjs(item).format('MMM YY');
-const longDateFormatter = item => dayjs(item).format('D MMM YYYY');
+const toolTipFormatter = item => 'Tot: ' + formatters.longDate(item);
 
 const CohortAnalysisGraph = ({ data }) => {
   // convert dates to dayjs instances
@@ -94,8 +93,8 @@ const CohortAnalysisGraph = ({ data }) => {
   return (
     <ResponsiveContainer width="100%" height={400}>
       <AreaChart data={cohorts} stackOffset="expand">
-        <XAxis dataKey="startDate" tickFormatter={shortDateFormatter} />
-        <YAxis tickFormatter={toPercent} />
+        <XAxis dataKey="endDate" tickFormatter={formatters.shortDate} />
+        <YAxis tickFormatter={formatters.toPercent} />
         {accountStates.map((state, index) => (
           <Area
             name={state.label}
@@ -109,13 +108,13 @@ const CohortAnalysisGraph = ({ data }) => {
           />
         ))}
         <Tooltip
-          labelFormatter={longDateFormatter}
+          labelFormatter={toolTipFormatter}
           animationEasing="ease-out"
           animationDuration={300}
           formatter={(value, name, props) => {
             const state = props.dataKey.replace('Perc', '');
             const count = props.payload[state];
-            return `${count} (${toPercent(value)})`;
+            return `${count} (${formatters.toPercent(value)})`;
           }}
         />
         <Legend iconType="circle" />
@@ -129,7 +128,7 @@ const CohortAnalysisGraph = ({ data }) => {
           dataKey="startDate"
           height={30}
           stroke={blueGrey[500]}
-          tickFormatter={shortDateFormatter}
+          tickFormatter={formatters.shortDate}
         />
       </AreaChart>
     </ResponsiveContainer>
