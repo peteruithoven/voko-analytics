@@ -98,6 +98,7 @@ const CohortAnalysisGraph = ({ data }) => {
             name={phase.label}
             dataKey={`${phase.key}Perc`}
             stroke={phase.color}
+            strokeWidth={0}
             fill={phase.color}
             type="monotone"
             stackId="cohort"
