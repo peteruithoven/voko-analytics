@@ -2,7 +2,6 @@ import React from 'react';
 import { useFetch } from 'react-fetch-hook';
 import { Box, Typography, GridList, GridListTile } from '@material-ui/core';
 import { ResponsiveContainer } from 'recharts';
-import colors from './colors.js';
 import BooleanPieChart from './BooleanPieChart.js';
 import AccountsHistoryGraph from './AccountsHistoryGraph.js';
 import CohortAnalysisGraph from './CohortAnalysisGraph.js';

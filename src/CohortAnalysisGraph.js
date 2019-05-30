@@ -12,7 +12,6 @@ import {
   ReferenceLine,
 } from 'recharts';
 import { blueGrey, teal } from '@material-ui/core/colors';
-import colors from './colors.js';
 import { funnelPhases, getFunnelPhase } from './accountStates.js';
 import * as formatters from './formatters.js';
 
