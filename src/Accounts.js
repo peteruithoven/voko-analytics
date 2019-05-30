@@ -54,7 +54,7 @@ function Accounts() {
             </Typography>
             <ResponsiveContainer width="100%" height={200}>
               <BooleanPieChart
-                data={getStatePieData(data, state, colors[index])}
+                data={getStatePieData(data, state, state.color)}
               />
             </ResponsiveContainer>
           </GridListTile>
