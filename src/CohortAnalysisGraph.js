@@ -13,14 +13,14 @@ import {
 } from 'recharts';
 import { blueGrey, teal } from '@material-ui/core/colors';
 import colors from './colors.js';
-import { accountStates, getAccountState } from './accountStates.js';
+import { funnelPhases, getFunnelPhase } from './accountStates.js';
 import * as formatters from './formatters.js';
 
-const initialStatesCount = {};
-for (const state of accountStates) {
-  initialStatesCount[state.key] = 0;
+const initialPhasesCount = {};
+for (const phase of funnelPhases) {
+  initialPhasesCount[phase.key] = 0;
 }
-console.log('initialStatesCount: ', initialStatesCount);
+console.log('initialPhasesCount: ', initialPhasesCount);
 
 const getCohortAccounts = (accounts, dateStart, dateEnd) =>
   accounts
@@ -32,27 +32,25 @@ const getCohortAccounts = (accounts, dateStart, dateEnd) =>
     )
     .map(account => ({
       ...account,
-      state: getAccountState(account),
+      phase: getFunnelPhase(account),
     }));
 
-const getStatesCounts = cohort =>
+const getPhasesCounts = cohort =>
   cohort.reduce(
     (accumulator, account) => {
-      accumulator[account.state]++;
+      accumulator[account.phase]++;
       return accumulator;
     },
-    { ...initialStatesCount }
+    { ...initialPhasesCount }
   );
 
-const getStatesPercs = (states, total) => {
+const getPhasesPercs = (states, total) => {
   const percs = {};
   for (const state in states) {
     percs[`${state}Perc`] = total ? states[state] / total : 0;
   }
   return percs;
 };
-
-const toolTipFormatter = item => 'Tot: ' + formatters.longDate(item);
 
 const CohortAnalysisGraph = ({ data }) => {
   // convert dates to dayjs instances
@@ -76,15 +74,15 @@ const CohortAnalysisGraph = ({ data }) => {
   let tickEnd = tickStart.add(1, 'month');
   do {
     const accounts = getCohortAccounts(sorted, tickStart, tickEnd);
-    const statesCounts = getStatesCounts(accounts);
-    const statesPercs = getStatesPercs(statesCounts, accounts.length);
+    const phasesCounts = getPhasesCounts(accounts);
+    const phasesPercs = getPhasesPercs(phasesCounts, accounts.length);
 
     cohorts.push({
       startDate: tickStart.toISOString(),
       endDate: tickEnd.toISOString(),
       accounts,
-      ...statesCounts,
-      ...statesPercs,
+      ...phasesCounts,
+      ...phasesPercs,
     });
     tickStart = tickEnd;
     tickEnd = tickEnd.add(1, 'month');
@@ -96,16 +94,15 @@ const CohortAnalysisGraph = ({ data }) => {
       <AreaChart data={cohorts} stackOffset="expand">
         <XAxis dataKey="endDate" tickFormatter={formatters.shortDate} />
         <YAxis tickFormatter={formatters.toPercent} />
-        {accountStates.map((state, index) => (
+        {funnelPhases.map(phase => (
           <Area
-            name={state.label}
-            dataKey={`${state.key}Perc`}
-            // stroke="none"
-            stroke={colors[index]}
-            fill={colors[index]}
+            name={phase.label}
+            dataKey={`${phase.key}Perc`}
+            stroke={phase.color}
+            fill={phase.color}
             type="monotone"
             stackId="cohort"
-            key={state.key}
+            key={phase.key}
           />
         ))}
         <Tooltip

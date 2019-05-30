@@ -31,10 +31,20 @@ export const accountStates = [
   },
 ];
 
-export function getAccountState(account) {
-  for (const state of accountStates) {
-    if (state.predicate(account)) {
-      return state.key;
+export const byKey = key => accountStates.filter(state => state.key === key)[0];
+
+export const funnelPhases = [
+  byKey('created'),
+  byKey('confirmed'),
+  byKey('active'),
+  byKey('ordered'),
+];
+
+export function getFunnelPhase(account) {
+  const reversedPhases = [...funnelPhases].reverse();
+  for (const phase of reversedPhases) {
+    if (phase.predicate(account)) {
+      return phase.key;
     }
   }
 }
